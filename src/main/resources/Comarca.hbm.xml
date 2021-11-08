@@ -7,7 +7,7 @@
     <class name="classes.Comarca" table="comarca" schema="public" catalog="geo_ad">
         <id name="nomC" column="nom_c"/>
         <property name="provincia" column="provincia"/>
-        <set name="poblacions" inverse="true">
+        <set name="poblacions" inverse="true" order-by="nom">
             <key>
                 <column name="nom_c" not-null="true"/>
             </key>
