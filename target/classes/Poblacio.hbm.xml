@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="classes.Poblacio" table="poblacio" schema="public" catalog="geo_ad">
+        <id name="codM" column="cod_m"/>
+        <property name="nom" column="nom"/>
+        <property name="poblacio" column="poblacio"/>
+        <property name="extensio" column="extensio"/>
+        <property name="altura" column="altura"/>
+        <property name="longitud" column="longitud"/>
+        <property name="latitud" column="latitud"/>
+        <property name="llengua" column="llengua"/>
+        <many-to-one name="comarca" class="classes.Comarca">
+            <column name="nom_c" not-null="true"/>
+        </many-to-one>
+        <set name="instituts" inverse="true">
+            <key>
+                <column name="cod_m" not-null="true"/>
+            </key>
+            <one-to-many not-found="ignore" class="classes.Institut"/>
+        </set>
+    </class>
+</hibernate-mapping>

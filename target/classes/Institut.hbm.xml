@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="classes.Institut" table="institut" schema="public" catalog="geo_ad">
+        <id name="codi" column="codi"/>
+        <property name="nom" column="nom"/>
+        <property name="adreca" column="adreca"/>
+        <property name="numero" column="numero"/>
+        <property name="codpostal" column="codpostal"/>
+        <many-to-one name="poblacio" class="classes.Poblacio">
+            <column name="cod_m" not-null="true"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>
