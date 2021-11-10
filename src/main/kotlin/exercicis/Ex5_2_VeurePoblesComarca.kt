@@ -78,6 +78,8 @@ class Finestra : JFrame() {
             area.text = "La comarca '$comarca' no existe."
         } else {
             val poblacions = comarcaSelec.poblacions
+            area.text = "La comarca '$comarca' te ${poblacions.size} pobles:\n\n"
+
             for (poble in poblacions.sortedBy { it.nom })
                 area.append("${poble.nom}\n")
         }
