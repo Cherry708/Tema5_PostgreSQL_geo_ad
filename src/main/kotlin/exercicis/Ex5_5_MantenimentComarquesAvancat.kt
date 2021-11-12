@@ -171,15 +171,14 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         // No us oblideu d'habilitar-los quan toque
         anterior.isEnabled = indActual != 0
         seguent.isEnabled = indActual != llistaComarques.lastIndex
-
     }
 
     fun inserir() {
         //accions per a preparar per a inserir una nova comarca
         nomComarca.text = ""
         nomComarca.isEditable = true
-        pBotonsAccCanc.isVisible = true
 
+        pBotonsAccCanc.isVisible = true
         activarBotons(false)
         //Modificar la base de datos y la lista
     }
@@ -187,12 +186,14 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun modificar() {
         //accions per a preparar per a modificar la comarca actual
         //Modificar la base de datos y la lista
+        pBotonsAccCanc.isVisible = true
         activarBotons(false)
     }
 
     fun esborrar() {
         //accions per a preparar per a esborrar la comarca actual
         //Modificar la base de datos y la lista
+        pBotonsAccCanc.isVisible = true
         activarBotons(false)
     }
 
@@ -217,6 +218,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
             llistaComarques.remove(llistaComarques.get(indActual))
             */
         }
+        pBotonsAccCanc.isVisible = false
         activarBotons(true)
     }
 
@@ -224,7 +226,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //accions per a cancel·lar la inserció, modificació o esborrat
         nomComarca.text = llistaComarques.get(indActual).nomC
         nomComarca.isEditable = false
-        pBotonsAccCanc.isVisible = true
+        pBotonsAccCanc.isVisible = false
 
         activarBotons(true)
     }
@@ -240,8 +242,8 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun activarBotons(b: Boolean) {
         // Mètode per activar o desactivar (segons el paràmetre) els botons de moviment i els d'actualització
         // Farem invisible o visible el panell dels botons acceptar i cancel·lar (pBotonsAccCanc
-        pBotonsMov.isEnabled = b
-        pBotonsAct.isEnabled = b
+        pBotonsMov.isVisible = b
+        pBotonsAct.isVisible = b
     }
 
     fun eixir() {
