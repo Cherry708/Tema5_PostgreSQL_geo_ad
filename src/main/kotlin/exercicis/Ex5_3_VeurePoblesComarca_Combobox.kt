@@ -28,6 +28,7 @@ class FinestraComboBox : JFrame() {
     val area = JList(listModel)
     val peu = JTextField()
 
+
     val sessio = Configuration().configure().buildSessionFactory().openSession()
 
     init {
@@ -74,6 +75,8 @@ class FinestraComboBox : JFrame() {
     }
 
     fun visualitzaCom(comarca: String) {
+        LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE)
+
         val comarcaSelec = sessio.get("classes.Comarca", comarca) as Comarca?
         listModel.clear()
         if (comarcaSelec != null){
@@ -96,16 +99,13 @@ class FinestraComboBox : JFrame() {
     }
 
     fun visualitzaInstituts(poble: String) {
-       /* POR HACER
-        val comarca = sessio.createQuery("from Comarca where nom = '$poble'") as Comarca
-        val pobleSelec = sessio.get("classes.Poblacio", poble) as Poblacio
-        comarca.poblacions.indexOf(pobleSelec)
+
+        val consultaPoblacio = sessio.createQuery("from Poblacio where nom = '${poble.replace("'","''")}'")
+        val poblacio = consultaPoblacio.uniqueResult() as Poblacio
+
+        peu.text = "${poblacio.nom}: ${poblacio.instituts.size} instituts"
 
 
-
-
-        peu.text = "${pobleSelec.nom}: ${pobleSelec.instituts.size} instituts"
-        */
         // Instruccions per a mostrar el número d'Instituts del poble seleccionat
         // La millor manera és per mig d'una consulta. Podem tenir problemes amb la cometa simple
         // Una manera de solucionar el problema de la cometa simple és utilitzar poble.replaceAll("'","''").
