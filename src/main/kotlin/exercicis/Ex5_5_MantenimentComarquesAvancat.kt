@@ -180,18 +180,20 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomComarca.isEditable = true
         pBotonsAccCanc.isVisible = true
 
+        activarBotons(false)
         //Modificar la base de datos y la lista
     }
 
     fun modificar() {
         //accions per a preparar per a modificar la comarca actual
         //Modificar la base de datos y la lista
+        activarBotons(false)
     }
 
     fun esborrar() {
         //accions per a preparar per a esborrar la comarca actual
-
         //Modificar la base de datos y la lista
+        activarBotons(false)
     }
 
     fun acceptar() {
@@ -215,6 +217,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
             llistaComarques.remove(llistaComarques.get(indActual))
             */
         }
+        activarBotons(true)
     }
 
     fun cancelar() {
@@ -222,6 +225,8 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomComarca.text = llistaComarques.get(indActual).nomC
         nomComarca.isEditable = false
         pBotonsAccCanc.isVisible = true
+
+        activarBotons(true)
     }
 
     fun buscaCom(text: String): Int {
