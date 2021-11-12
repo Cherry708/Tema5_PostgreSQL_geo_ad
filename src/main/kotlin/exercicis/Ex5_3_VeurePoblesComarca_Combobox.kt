@@ -1,7 +1,6 @@
 package exercicis
 
 
-
 import java.awt.EventQueue
 import java.awt.BorderLayout
 import java.awt.FlowLayout
@@ -28,12 +27,16 @@ class FinestraComboBox : JFrame() {
     val area = JList(listModel)
     val peu = JTextField()
 
-
+    /*No funciona suprimir advertencias aqui,
+     la solucion seria realizar una conexion a cada funcion
+     pero provoca que la ejecucion sea mucho mas lenta.
+     Por otro lado, los warnings no suponen ningun problema,
+     por lo tanto, se ignoran.
+    */
     val sessio = Configuration().configure().buildSessionFactory().openSession()
 
     init {
-        //Suprime advertencias
-        LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE)
+
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setTitle("HIBERNATE: Visualitzar Comarques i Pobles amb ComboBox")
         setBounds(100, 100, 550, 400)
@@ -67,7 +70,7 @@ class FinestraComboBox : JFrame() {
     fun agafarComarques() {
         val consultaComarcas = sessio.createQuery("from Comarca")
         val listaComarcas = consultaComarcas.list() as ArrayList<Comarca>
-        for (comarca in listaComarcas.sortedBy { it.nomC }){
+        for (comarca in listaComarcas.sortedBy { it.nomC }) {
             cbCombo.addItem(comarca.nomC)
         }
         // Instruccions per a posar en el ComboBox el nom de totes les comarques, millor si és per ordre alfabètic
@@ -79,9 +82,9 @@ class FinestraComboBox : JFrame() {
 
         val comarcaSelec = sessio.get("classes.Comarca", comarca) as Comarca?
         listModel.clear()
-        if (comarcaSelec != null){
+        if (comarcaSelec != null) {
             val poblacions = comarcaSelec.poblacions
-            for (poblacio in poblacions){
+            for (poblacio in poblacions) {
                 listModel.addElement(poblacio.nom)
             }
             area.model = listModel
@@ -100,7 +103,7 @@ class FinestraComboBox : JFrame() {
 
     fun visualitzaInstituts(poble: String) {
 
-        val consultaPoblacio = sessio.createQuery("from Poblacio where nom = '${poble.replace("'","''")}'")
+        val consultaPoblacio = sessio.createQuery("from Poblacio where nom = '${poble.replace("'", "''")}'")
         val poblacio = consultaPoblacio.uniqueResult() as Poblacio
 
         peu.text = "${poblacio.nom}: ${poblacio.instituts.size} instituts"
