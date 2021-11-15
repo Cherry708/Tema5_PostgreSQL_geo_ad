@@ -174,17 +174,9 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomProvincia.text = ""
         nomProvincia.isEditable = true
 
-        val t = s.beginTransaction ()
-        val comarca = Comarca()
-
-        comarca.nomC = nomComarca.text
-        comarca.provincia = nomProvincia.text
-
         //Modificar la base de datos y la lista
         //No se debe modificar aun, se debe guardar en aceptar. Asi con todos
-        s.save(comarca)
-
-        t.commit()
+        //Estos metodos solo deben preparar los campos para cuando se haga click en aceptar o cancelar
 
         pBotonsAccCanc.isVisible = true
         activarBotons(false)
@@ -230,6 +222,19 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         if (nomComarca.isEditable && nomProvincia.isEditable){
             //Llamar a la funcion
             inserir()
+
+            val t = s.beginTransaction ()
+            val comarca = Comarca()
+
+            comarca.nomC = nomComarca.text
+            comarca.provincia = nomProvincia.text
+
+            //Modificar la base de datos y la lista
+            //No se debe modificar aun, se debe guardar en aceptar. Asi con todos
+            s.save(comarca)
+
+            t.commit()
+
             nomComarca.isEditable = false
             nomProvincia.isEditable = false
             activarBotons(true)
