@@ -173,10 +173,9 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomComarca.isEditable = true
         nomProvincia.text = ""
         nomProvincia.isEditable = true
-        activarBotonsNavegacio(false)
+        botonsNavegacio(false)
         pBotonsAccCanc.isVisible = true
 
-        //Modificar la base de datos y la lista
         //No se debe modificar aun, se debe guardar en aceptar. Asi con todos
         //Estos metodos solo deben preparar los campos para cuando se haga click en aceptar o cancelar
     }
@@ -185,41 +184,21 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //accions per a preparar per a modificar la comarca actual
         //Modificar la base de datos y la lista
         nomProvincia.isEditable = true
-
-        //Probar con consulta
-        val t = s.beginTransaction()
-        val comarca = s.load("classes.Comarca", nomComarca.text) as Comarca
-        comarca.provincia = nomProvincia.text
-        s.update(comarca)
-        t.commit()
-        llistaComarques.get(llistaComarques.indexOf(comarca)).provincia = nomProvincia.text
-
-        nomProvincia.isEditable = true
-
         pBotonsAccCanc.isVisible = true
-        activarBotonsNavegacio(false)
+        botonsNavegacio(false)
     }
 
     fun esborrar() {
         //accions per a preparar per a esborrar la comarca actual
         //Modificar la base de datos y la lista
         pBotonsAccCanc.isVisible = true
-
-        val t = s.beginTransaction()
-        val comarca = s.load("classes.Comarca", nomComarca.text)
-
-        s.delete(comarca)
-
-        t.commit()
-        activarBotonsNavegacio(false)
+        botonsNavegacio(false)
     }
 
     fun acceptar() {
         //accions per a fer l'acció d'inserir, modificar i esborrar
-
         //Insertar (Se ha de modificar la base de datos y lista)
         if (nomComarca.isEditable && nomProvincia.isEditable){
-            //Llamar a la funcion
 
             val t = s.beginTransaction ()
             val comarca = Comarca()
@@ -227,36 +206,43 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
             comarca.nomC = nomComarca.text
             comarca.provincia = nomProvincia.text
 
-            //Modificar la base de datos y la lista
-            //No se debe modificar aun, se debe guardar en aceptar. Asi con todos
             s.save(comarca)
 
             t.commit()
 
             nomComarca.isEditable = false
             nomProvincia.isEditable = false
-            activarBotonsNavegacio(true)
-            pBotonsAccCanc.isVisible = false
         }
 
         //Modificar (Se ha de modificarla bade de datos y lista)
         if (!nomComarca.isEditable && nomProvincia.isEditable){
-            //Llamar a la funcion
-            modificar()
+            val t = s.beginTransaction()
+            val comarca = s.load("classes.Comarca", nomComarca.text) as Comarca
+            comarca.provincia = nomProvincia.text
+            s.update(comarca)
+            t.commit()
+            llistaComarques.get(llistaComarques.indexOf(comarca)).provincia = nomProvincia.text
+
             nomProvincia.isEditable = false
         }
 
         //Borrar (Se ha de modificarla bade de datos y lista)
         if (!nomComarca.isEditable && !nomProvincia.isEditable){
-            //Llamar a la funcion
-            esborrar()
+
+            val t = s.beginTransaction()
+            val comarca = s.load("classes.Comarca", nomComarca.text)
+
+            s.delete(comarca)
+
+            t.commit()
+
             /*
             ESTO SOLO NO, TAMBIEN ELIMINAR EN LA BASE DE DATOS
             llistaComarques.remove(llistaComarques.get(indActual))
             */
         }
         pBotonsAccCanc.isVisible = false
-        activarBotonsNavegacio(true)
+        botonsNavegacio(true)
     }
 
     fun cancelar() {
@@ -268,7 +254,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomComarca.text = llistaComarques.get(indActual).nomC
         nomProvincia.text = llistaComarques.get(indActual).provincia
 
-        activarBotonsNavegacio(true)
+        botonsNavegacio(true)
     }
 
     fun buscaCom(text: String): Int {
@@ -279,7 +265,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         return ind
     }
 
-    fun activarBotonsNavegacio(b: Boolean) {
+    fun botonsNavegacio(b: Boolean) {
         // Mètode per activar o desactivar (segons el paràmetre) els botons de moviment i els d'actualització
         // Farem invisible o visible el panell dels botons acceptar i cancel·lar (pBotonsAccCanc
         pBotonsMov.isVisible = b
