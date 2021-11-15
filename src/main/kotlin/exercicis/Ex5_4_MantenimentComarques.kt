@@ -96,6 +96,7 @@ class FinestraMantenimentComarques : JFrame() {
     fun visComarca(indActual: Int) {
         // Mètode per a visualitzar la comarca marcada per l'índex que ve com a paràmetre
         nomComarca.text = llistaComarques.get(indActual).nomC
+        nomProvincia.text = llistaComarques.get(indActual).provincia
         controlBotons()
     }
 

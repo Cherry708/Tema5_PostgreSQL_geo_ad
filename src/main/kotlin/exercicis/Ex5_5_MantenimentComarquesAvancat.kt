@@ -2,12 +2,9 @@ package exercicis
 
 
 
-import FinestraMantenimentComarques
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import java.awt.GridLayout
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.EventQueue
 
 import javax.swing.JButton
@@ -16,12 +13,8 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
-import org.hibernate.Query
-import org.hibernate.Session
-
 import classes.Comarca
 import org.hibernate.cfg.Configuration
-import java.awt.event.WindowEvent
 
 import kotlin.system.exitProcess
 
@@ -141,6 +134,7 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun visComarca(indActual: Int) {
         // Mètode per a visualitzar la comarca marcada per l'índex que ve com a paràmetre
         nomComarca.text = llistaComarques.get(indActual).nomC
+        nomProvincia.text = llistaComarques.get(indActual).provincia
         controlBotons()
     }
 
@@ -178,6 +172,16 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         nomComarca.text = ""
         nomComarca.isEditable = true
 
+        val t = s.beginTransaction ()
+        val comarca = Comarca()
+
+        comarca.nomC = nomComarca.text
+        comarca.provincia = nomProvincia.text
+
+        s.save(comarca)
+
+        t.commit()
+
         pBotonsAccCanc.isVisible = true
         activarBotons(false)
         //Modificar la base de datos y la lista
@@ -186,6 +190,16 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun modificar() {
         //accions per a preparar per a modificar la comarca actual
         //Modificar la base de datos y la lista
+        nomProvincia.isEditable = true
+
+        val t = s.beginTransaction()
+        val comarca = s.load("classes.Comarca", nomComarca.text) as Comarca
+        comarca.provincia = nomProvincia.text
+        s.update(comarca)
+        t.rollback()
+
+        llistaComarques.get(llistaComarques.indexOf(comarca)).provincia = nomProvincia.text
+
         pBotonsAccCanc.isVisible = true
         activarBotons(false)
     }
@@ -194,6 +208,13 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //accions per a preparar per a esborrar la comarca actual
         //Modificar la base de datos y la lista
         pBotonsAccCanc.isVisible = true
+
+        val t = s.beginTransaction()
+        val comarca = s.load("classes.Comarca", nomComarca.text)
+
+        s.delete(comarca)
+
+        t.commit()
         activarBotons(false)
     }
 
@@ -203,16 +224,19 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //Insertar (Se ha de modificar la base de datos y lista)
         if (nomComarca.isEditable && !nomProvincia.isEditable){
             //Llamar a la funcion
+            inserir()
         }
 
-        //Editar (Se ha de modificarla bade de datos y lista)
+        //Modificar (Se ha de modificarla bade de datos y lista)
         if (nomComarca.isEditable && nomProvincia.isEditable){
             //Llamar a la funcion
+            modificar()
         }
 
         //Borrar (Se ha de modificarla bade de datos y lista)
         if (!nomComarca.isEditable && !nomProvincia.isEditable){
             //Llamar a la funcion
+            esborrar()
             /*
             ESTO SOLO NO, TAMBIEN ELIMINAR EN LA BASE DE DATOS
             llistaComarques.remove(llistaComarques.get(indActual))
@@ -242,8 +266,8 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun activarBotons(b: Boolean) {
         // Mètode per activar o desactivar (segons el paràmetre) els botons de moviment i els d'actualització
         // Farem invisible o visible el panell dels botons acceptar i cancel·lar (pBotonsAccCanc
-        pBotonsMov.isVisible = b
-        pBotonsAct.isVisible = b
+        pBotonsMov.isOpaque = b
+        pBotonsAct.isEnabled = b
     }
 
     fun eixir() {
