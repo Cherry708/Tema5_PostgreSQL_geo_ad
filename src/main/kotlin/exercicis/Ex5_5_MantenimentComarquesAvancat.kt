@@ -171,6 +171,8 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //accions per a preparar per a inserir una nova comarca
         nomComarca.text = ""
         nomComarca.isEditable = true
+        nomProvincia.text = ""
+        nomProvincia.isEditable = true
 
         val t = s.beginTransaction ()
         val comarca = Comarca()
@@ -178,13 +180,14 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         comarca.nomC = nomComarca.text
         comarca.provincia = nomProvincia.text
 
+        //Modificar la base de datos y la lista
+        //No se debe modificar aun, se debe guardar en aceptar. Asi con todos
         s.save(comarca)
 
         t.commit()
 
         pBotonsAccCanc.isVisible = true
         activarBotons(false)
-        //Modificar la base de datos y la lista
     }
 
     fun modificar() {
@@ -192,13 +195,15 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //Modificar la base de datos y la lista
         nomProvincia.isEditable = true
 
+        //Probar con consulta
         val t = s.beginTransaction()
         val comarca = s.load("classes.Comarca", nomComarca.text) as Comarca
         comarca.provincia = nomProvincia.text
         s.update(comarca)
-        t.rollback()
-
+        t.commit()
         llistaComarques.get(llistaComarques.indexOf(comarca)).provincia = nomProvincia.text
+
+        nomProvincia.isEditable = true
 
         pBotonsAccCanc.isVisible = true
         activarBotons(false)
@@ -222,15 +227,20 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
         //accions per a fer l'acció d'inserir, modificar i esborrar
 
         //Insertar (Se ha de modificar la base de datos y lista)
-        if (nomComarca.isEditable && !nomProvincia.isEditable){
+        if (nomComarca.isEditable && nomProvincia.isEditable){
             //Llamar a la funcion
             inserir()
+            nomComarca.isEditable = false
+            nomProvincia.isEditable = false
+            activarBotons(true)
+            pBotonsAccCanc.isVisible = false
         }
 
         //Modificar (Se ha de modificarla bade de datos y lista)
-        if (nomComarca.isEditable && nomProvincia.isEditable){
+        if (!nomComarca.isEditable && nomProvincia.isEditable){
             //Llamar a la funcion
             modificar()
+            nomProvincia.isEditable = false
         }
 
         //Borrar (Se ha de modificarla bade de datos y lista)
@@ -248,9 +258,12 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
 
     fun cancelar() {
         //accions per a cancel·lar la inserció, modificació o esborrat
-        nomComarca.text = llistaComarques.get(indActual).nomC
         nomComarca.isEditable = false
+        nomProvincia.isEditable = false
         pBotonsAccCanc.isVisible = false
+
+        nomComarca.text = llistaComarques.get(indActual).nomC
+        nomProvincia.text = llistaComarques.get(indActual).provincia
 
         activarBotons(true)
     }
@@ -266,8 +279,8 @@ class FinestraMantenimentComarquesAvancat : JFrame() {
     fun activarBotons(b: Boolean) {
         // Mètode per activar o desactivar (segons el paràmetre) els botons de moviment i els d'actualització
         // Farem invisible o visible el panell dels botons acceptar i cancel·lar (pBotonsAccCanc
-        pBotonsMov.isOpaque = b
-        pBotonsAct.isEnabled = b
+        pBotonsMov.isVisible = b
+        pBotonsAct.isVisible = b
     }
 
     fun eixir() {
